@@ -12,8 +12,10 @@ class DataIngestion:
 
     def __init__(self,data_ingestion_config:DataIngestionConfig)-> None:
         try:
-            logging.info(f"{'='*20}  Data ingestion log started {'='*20}")
-            self.data_ingestion_config=data_ingestion_config            
+            logging.info(f"{'='*30}  Data ingestion log started {'='*30}")
+            self.data_ingestion_config=data_ingestion_config
+            logging.info(f" data_ingestion_config:\n{data_ingestion_config}")     
+
         except Exception as e:
             raise SalesException(e,sys) from e
 
@@ -99,3 +101,6 @@ class DataIngestion:
             return data_ingestion_artifact
         except Exception as e:
             raise SalesException(e,sys) from e        
+
+    def __del__(self):
+        logging.info(f"{'='*30} Data Ingestion log completed.{'='*30}\n")

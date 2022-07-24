@@ -28,3 +28,7 @@ categorical_columns:
   - Outlet_Type
 
 target_columns: Item_Outlet_Sales
+
+id_columns:
+ - Item_Identifier
+ - Outlet_Identifier

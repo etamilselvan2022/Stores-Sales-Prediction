@@ -39,7 +39,6 @@ class Configuration:
                             ingested_train_dir=ingested_train_dir, 
                             ingested_test_dir=ingested_test_dir)
 
-            logging.info(f"data_ingestion_config:{data_ingestion_config}")
 
             return data_ingestion_config
             
@@ -56,8 +55,8 @@ class Configuration:
             
             config_info=self.config_info[DATA_VALIDATION_CONFIG_KEY]
             schema_file_path=os.path.join(ROOT_DIR,
-                                      config_info[DATA_VALIDATION_SCHEMA_DIR_KEY,
-                                      config_info[DATA_VALIDATION_SCHEMA_FILE_NAME_KEY]])
+                                      config_info[DATA_VALIDATION_SCHEMA_DIR_KEY],
+                                      config_info[DATA_VALIDATION_SCHEMA_FILE_NAME_KEY])
 
             report_file_path=os.path.join(data_validation_artifact_dir,config_info[DATA_VALIDATION_REPORT_FILE_NAME_KEY])
 
@@ -67,7 +66,6 @@ class Configuration:
                                  report_file_path=report_file_path, 
                                  report_page_file_path=report_page_file_path)
 
-            logging.info(f"data_validation_config:{data_validation_config}")
 
             return data_validation_config
             

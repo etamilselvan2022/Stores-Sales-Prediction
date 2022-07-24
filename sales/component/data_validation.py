@@ -1,4 +1,5 @@
 from tkinter import E
+from sales.constant import ID_COLUMNS
 from sales.exception import SalesException
 from sales.logger import logging
 import os,sys
@@ -10,6 +11,7 @@ from evidently.model_profile import Profile
 from evidently.model_profile.sections import DataDriftProfileSection
 from evidently.dashboard import Dashboard
 from evidently.dashboard.tabs import DataDriftTab
+from sales.util.util import read_yaml_file
 
 
 class DataValidation:
@@ -17,9 +19,11 @@ class DataValidation:
     def __init__(self,data_validation_config:DataValidationConfig,
                       data_ingestion_artifact:DataIngestionArtifact)-> None:
         try:
-            logging.info(f"{'='*20} Data Validation log started.{'='*20}")
+            logging.info(f"{'='*30} Data Validation log started.{'='*30}\n")
             self.data_validation_config=data_validation_config
             self.data_ingestion_artifact=data_ingestion_artifact
+            logging.info(f"data_validation_config  :{data_validation_config}") 
+            logging.info(f"data_ingestion_artifact :{data_ingestion_artifact}") 
         except Exception as e:
             raise SalesException(e,sys) from e 
 
@@ -34,7 +38,7 @@ class DataValidation:
             test_file_path=self.data_ingestion_artifact.test_file_path
 
             is_train_file_exist=os.path.exists(train_file_path)
-            is_test_file_exist=os.path.exist(test_file_path)
+            is_test_file_exist=os.path.exists(test_file_path)
 
             is_available=is_train_file_exist and is_test_file_exist
 
@@ -84,11 +88,12 @@ class DataValidation:
         try:
             train_df=pd.read_csv(self.data_ingestion_artifact.train_file_path)
             test_df=pd.read_csv(self.data_ingestion_artifact.test_file_path)
-            return train_df,test_df
+            id_columns=read_yaml_file(self.data_validation_config.schema_file_path)[ID_COLUMNS]
+            return train_df.drop(columns=id_columns,axis=1),test_df.drop(columns=id_columns,axis=1)
         except Exception as e:
             raise SalesException(e,sys) from e 
 
-    def save_data_drift_report(self):
+    def save_data_drift_report_page(self):
         try:
             dashboard=Dashboard(tabs=[DataDriftTab()])
             train_df,test_df=self.get_train_and_test_df()
@@ -140,10 +145,18 @@ class DataValidation:
             self.validate_dataset_schema()
             self.is_data_drift_found()
 
+            data_validation_artifact=DataValidationArtifact(is_validated=True, message='Data Validated Successfully', 
+            schema_file_path=self.data_validation_config.schema_file_path, 
+            report_file_path=self.data_validation_config.report_file_path, 
+            report_page_file_path=self.data_validation_config.report_page_file_path)
+
+            logging.info(f"data_validation_artifact:{data_validation_artifact}")
+
+            return data_validation_artifact
 
         except Exception as e:
             raise SalesException(e,sys) from e
 
 
     def __del__(self):
-        logging.info(f"{'='*20} Data Validation log completed.{'='*20}")
+        logging.info(f"\n{'='*30} Data Validation log completed.{'='*30}")
