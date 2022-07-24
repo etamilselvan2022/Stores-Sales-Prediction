@@ -5,6 +5,7 @@ from sales.entity.config_entity import DataIngestionConfig
 from sales.exception import SalesException
 from sales.entity.artifact_entity import DataIngestionArtifact,DataValidationArtifact
 from sales.component.data_ingestion import DataIngestion
+from sales.component.data_validation import DataValidation
 
 class Pipeline:
 

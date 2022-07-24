@@ -1,5 +1,4 @@
 import logging
-from tkinter import E
 from sales.constant import *
 from sales.exception import SalesException
 import os,sys

@@ -12,7 +12,7 @@ from evidently.dashboard import Dashboard
 from evidently.dashboard.tabs import DataDriftTab
 
 
-class Datavalidation:
+class DataValidation:
 
     def __init__(self,data_validation_config:DataValidationConfig,
                       data_ingestion_artifact:DataIngestionArtifact)-> None:
